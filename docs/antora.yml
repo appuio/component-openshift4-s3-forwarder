@@ -1,0 +1,6 @@
+name: openshift4-s3-forwarder
+title: openshift4-s3-forwarder
+version: master
+start_page: ROOT:index.adoc
+nav:
+  - modules/ROOT/partials/nav.adoc

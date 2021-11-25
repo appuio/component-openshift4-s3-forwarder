@@ -1,0 +1,5 @@
+= openshift4-s3-forwarder
+
+openshift4-s3-forwarder is a Commodore component to manage openshift4-s3-forwarder.
+
+See the xref:references/parameters.adoc[parameters] reference for further details.
