@@ -1,10 +1,15 @@
+#
+# File managed by ModuleSync - Do Not Edit
+#
+# Additional Makefiles can be added to `.sync.yml` in 'Makefile.includes'
+#
+
 # Commodore takes the root dir name as the component name
 COMPONENT_NAME ?= $(shell basename ${PWD} | sed s/component-//)
 
 compiled_path   ?= compiled/$(COMPONENT_NAME)/$(COMPONENT_NAME)
 root_volume     ?= -v "$${PWD}:/$(COMPONENT_NAME)"
 compiled_volume ?= -v "$${PWD}/$(compiled_path):/$(COMPONENT_NAME)"
-commodore_args  ?= --search-paths ./dependencies --search-paths .
 
 DOCKER_CMD   ?= docker
 DOCKER_ARGS  ?= run --rm -u "$$(id -u)" -w /$(COMPONENT_NAME)
@@ -14,6 +19,7 @@ JSONNETFMT_ARGS ?= --in-place --pad-arrays
 JSONNET_IMAGE   ?= docker.io/bitnami/jsonnet:latest
 JSONNET_DOCKER  ?= $(DOCKER_CMD) $(DOCKER_ARGS) $(root_volume) --entrypoint=jsonnetfmt $(JSONNET_IMAGE)
 
+YAML_FILES      ?= $(shell find . -type f -not -regex './\(helmcharts\|manifests\|vendor\)/.*' \( -name '*.yaml' -or -name '*.yml' \))
 YAMLLINT_ARGS   ?= --no-warnings
 YAMLLINT_CONFIG ?= .yamllint.yml
 YAMLLINT_IMAGE  ?= docker.io/cytopia/yamllint:latest
