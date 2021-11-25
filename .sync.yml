@@ -1,15 +1,7 @@
 :global:
   componentName: openshift4-s3-forwarder
-  githubUrl: https://github.com/appuio/component-openshift4-s3-forwarder
-  feature_goldenTests: true
+  feature_componentCompile: false
 
 docs/antora.yml:
   name: openshift4-s3-forwarder
-  title: openshift4-s3-forwarder
-.github/workflows/test.yaml:
-  test_makeTarget: test -e instance=${{ matrix.instance }}
-  goldenTest_makeTarget: golden-diff -e instance=${{ matrix.instance }}
-  matrix:
-    key: instance
-    entries:
-      - defaults
+  title: S3 Forwarder
