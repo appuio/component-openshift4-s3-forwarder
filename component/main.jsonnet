@@ -42,7 +42,7 @@ local configmap = kube.ConfigMap(app_name) {
           time_slice_format %(format)s
           <buffer time>
             @type memory
-            path /var/log/fluent/
+            path /fluentd/log/s3/
             compress text
             chunk_limit_size 256m
             timekey "#{ENV['S3_INTERVAL']}"
@@ -131,7 +131,7 @@ local statefulset = kube.StatefulSet(app_name) {
             terminationMessagePolicy: 'File',
             terminationMessagePath: '/dev/termination-log',
             volumeMounts_:: {
-              buffer: { mountPath: '/var/log/fluentd' },
+              buffer: { mountPath: '/fluentd/log/' },
               'fluentd-config': { readOnly: true, mountPath: '/fluent/etc/' },
               [if params.fluentd.ssl.enabled then 'fluentd-certs']:
                 { readOnly: true, mountPath: '/secret/fluentd' },
