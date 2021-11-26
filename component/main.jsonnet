@@ -11,9 +11,9 @@ local serviceaccount = kube.ServiceAccount(app_name);
 local configmap = kube.ConfigMap(app_name) {
   data: {
     'fluentd-loglevel': params.fluentd.loglevel,
-    's3_bucket': params.s3.bucket,
-    's3_endpoint': params.s3.endpoint,
-    'save_interval': params.s3.save_interval,
+    's3-bucket': params.s3.bucket,
+    's3-endpoint': params.s3.endpoint,
+    's3-interval': params.s3.interval,
     'td-agent.conf': |||
       <system>
         log_level "#{ENV['LOG_LEVEL']}"
@@ -38,21 +38,22 @@ local configmap = kube.ConfigMap(app_name) {
           aws_sec_key "#{ENV['S3_SECRET_KEY']}"
           s3_bucket "#{ENV['S3_BUCKET']}"
           s3_endpoint "#{ENV['S3_ENDPOINT']}"
-          path %Y-%m-%d/
-          time_slice_format %Y-%m-%d_%H%M
+          path %(path)s
+          time_slice_format %(format)s
           <buffer time>
             @type memory
-            # path /var/log/fluent/
-            # compress text
-            # chunk_limit_size 256m
-            timekey "#{ENV['SAVE_INTERVAL']}"
+            path /var/log/fluent/
+            compress text
+            chunk_limit_size 256m
+            timekey "#{ENV['S3_INTERVAL']}"
             timekey_wait 1m
             timekey_use_utc true
           </buffer>
-          # store_as gzip
         </match>
       </label>
     ||| % {
+      path: '%Y-%m-%d/',
+      format: '%Y-%m-%d_%H%M',
       tls_config: if params.fluentd.ssl.enabled then |||
         <transport tls>
           cert_path /secret/fluentd/tls.crt
@@ -105,9 +106,9 @@ local statefulset = kube.StatefulSet(app_name) {
               NODE_NAME: { fieldRef: { apiVersion: 'v1', fieldPath: 'spec.nodeName' } },
               SHARED_KEY: { secretKeyRef: { name: app_name, key: 'shared_key' } },
               LOG_LEVEL: { configMapKeyRef: { name: app_name, key: 'fluentd-loglevel' } },
-              SAVE_INTERVAL: { configMapKeyRef: { name: app_name, key: 'save_interval' } },
-              S3_BUCKET: { configMapKeyRef: { name: app_name, key: 's3_bucket' } },
-              S3_ENDPOINT: { configMapKeyRef: { name: app_name, key: 's3_endpoint' } },
+              S3_INTERVAL: { configMapKeyRef: { name: app_name, key: 's3-interval' } },
+              S3_BUCKET: { configMapKeyRef: { name: app_name, key: 's3-bucket' } },
+              S3_ENDPOINT: { configMapKeyRef: { name: app_name, key: 's3-endpoint' } },
               S3_ACCESS_KEY: { secretKeyRef: { name: app_name, key: 'access_key' } },
               S3_SECRET_KEY: { secretKeyRef: { name: app_name, key: 'secret_key' } },
             },

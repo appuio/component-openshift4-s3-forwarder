@@ -3,3 +3,36 @@
 openshift4-s3-forwarder is a Commodore component to manage openshift4-s3-forwarder.
 
 See the xref:references/parameters.adoc[parameters] reference for further details.
+
+== Setup
+
+To setup the S3 forwarder you need to:
+
+* Enable the component for the cluster
+** If you plan to forward to multiple S3 servers (multi-tenant) instantiate the component.
+* Create the following secrets in Vault:
+** xref:how-tos/create-fluentd-cert.adoc[SSL certificate and private key] for the s3-forwarder
+** xref:how-tos/upload-s3-secrets.adoc[S3 secrets] for the S3 server
+* Configure the S3 server xref:references/parameters.adoc#s3[endpoint and bucket].
+
+=== Example
+
+[source,yaml]
+----
+applications:
+  - openshift4-s3-forwarder as s3-forwarder-customer-a
+
+parameters:
+  s3_forwarder_customer_a:
+    fluentd:
+      ssl:
+        enabled: true
+        cert: |-
+          -----BEGIN CERTIFICATE-----
+          ...
+          -----END CERTIFICATE-----
+
+    s3:
+      bucket: "archive-customer-a"
+      endpoint: "https://sos-ch-dk-2.exo.io"
+----
