@@ -1,4 +1,40 @@
 parameters:
   openshift4_s3_forwarder:
     =_metadata: {}
-    namespace: syn-openshift4-s3-forwarder
+    multi_instance: true
+    namespace: openshift-logging
+
+    images:
+      fluentd:
+        registry: docker.io
+        repository: vshnstephan/fluentd-s3
+        tag: latest
+
+    fluentd:
+      loglevel: info
+      replicas: 1
+
+      sharedkey: '?{vaultkv:${cluster:tenant}/${cluster:name}/openshift4-s3-forwarder/${_instance}/fluentd/sharedkey}'
+
+      ssl:
+        enabled: false
+        cert: ""
+        key: '?{vaultkv:${cluster:tenant}/${cluster:name}/openshift4-s3-forwarder/${_instance}/fluentd/privatekey}'
+
+      resources:
+        requests:
+          cpu: 100m
+          memory: 512Mi
+        limits:
+          cpu: 500m
+          memory: 1024Mi
+
+      # less used parameters
+      nodeselector: {}
+      affinity: {}
+      tolerations: []
+
+    s3:
+      save_interval: 5m
+      access_key: '?{vaultkv:${cluster:tenant}/${cluster:name}/openshift4-s3-forwarder/${_instance}/s3/accesskey}'
+      secret_key: '?{vaultkv:${cluster:tenant}/${cluster:name}/openshift4-s3-forwarder/${_instance}/s3/secretkey}'
