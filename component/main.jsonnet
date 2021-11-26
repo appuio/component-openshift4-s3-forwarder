@@ -20,7 +20,6 @@ local configmap = kube.ConfigMap(app_name) {
       </system>
       <source>
         @type forward
-        @label forward
         port 24224
         %(tls_config)s
         <security>
@@ -28,29 +27,27 @@ local configmap = kube.ConfigMap(app_name) {
           self_hostname "#{ENV['HOSTNAME']}"
         </security>
       </source>
-      <label @forward>
-        <match **>
-          @type s3
-          <format>
-            @type json
-          </format>
-          aws_key_id "#{ENV['S3_ACCESS_KEY']}"
-          aws_sec_key "#{ENV['S3_SECRET_KEY']}"
-          s3_bucket "#{ENV['S3_BUCKET']}"
-          s3_endpoint "#{ENV['S3_ENDPOINT']}"
-          path %(path)s
-          time_slice_format %(format)s
-          <buffer time>
-            @type memory
-            path /fluentd/log/s3/
-            compress text
-            chunk_limit_size 256m
-            timekey "#{ENV['S3_INTERVAL']}"
-            timekey_wait 1m
-            timekey_use_utc true
-          </buffer>
-        </match>
-      </label>
+      <match **>
+        @type s3
+        <format>
+          @type json
+        </format>
+        aws_key_id "#{ENV['S3_ACCESS_KEY']}"
+        aws_sec_key "#{ENV['S3_SECRET_KEY']}"
+        s3_bucket "#{ENV['S3_BUCKET']}"
+        s3_endpoint "#{ENV['S3_ENDPOINT']}"
+        path %(path)s
+        time_slice_format %(format)s
+        <buffer time>
+          @type memory
+          path /fluentd/log/s3/
+          compress text
+          chunk_limit_size 256m
+          timekey "#{ENV['S3_INTERVAL']}"
+          timekey_wait 1m
+          timekey_use_utc true
+        </buffer>
+      </match>
     ||| % {
       path: '%Y-%m-%d/',
       format: '%Y-%m-%d_%H%M',
@@ -132,7 +129,7 @@ local statefulset = kube.StatefulSet(app_name) {
             terminationMessagePath: '/dev/termination-log',
             volumeMounts_:: {
               buffer: { mountPath: '/fluentd/log/' },
-              'fluentd-config': { readOnly: true, mountPath: '/fluent/etc/' },
+              'fluentd-config': { readOnly: true, mountPath: '/fluentd/etc' },
               [if params.fluentd.ssl.enabled then 'fluentd-certs']:
                 { readOnly: true, mountPath: '/secret/fluentd' },
             },
