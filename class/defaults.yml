@@ -7,8 +7,8 @@ parameters:
     images:
       fluentd:
         registry: docker.io
-        repository: vshnstephan/fluentd-s3
-        tag: latest
+        repository: vshn/fluentd-s3
+        tag: v1.0.0
 
     fluentd:
       loglevel: info
