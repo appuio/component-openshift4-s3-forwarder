@@ -90,7 +90,7 @@ default:: Vault reference
 
 A Vault reference to the SSL private key.
 
-See xref:how-tos/create-fluentd-cert.adoc[Create Fluentd Cert] to generate the Fluentd certificate.
+See xref:how-tos/create-fluentd-cert.adoc[Create Fluentd Certificate] to generate the Fluentd certificate.
 
 
 == `s3`

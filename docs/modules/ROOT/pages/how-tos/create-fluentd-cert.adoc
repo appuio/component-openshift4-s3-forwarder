@@ -5,7 +5,7 @@ To create an SSL certificate for the s3-forwarder use this command and answer th
 [source,shell]
 ----
 export INSTANCE_NAME=s3-forwarder-customer-a <1>
-openssl req  -nodes -new -x509 -days 3650 -keyout server.key -out server.cert -subj /name=${INSTANCE_NAME}.openshift-logging.svc
+openssl req -nodes -new -x509 -days 3650 -keyout forwarder-tls.key -out forwarder-tls.cert -subj /name=${INSTANCE_NAME}.openshift-logging.svc
 ----
 <1> Set `INSTANCE_NAME` to the name you're instantiating the component with.
 
@@ -26,7 +26,7 @@ key="clusters/kv/${TENANT_ID}/${CLUSTER_ID}/openshift4-s3-forwarder/${instance}/
 vault kv get "${key}"
 
 # If there are existing secrets, add your instance secrets:
-vault kv patch "${key}" privatekey=$(cat server.key)
+vault kv patch "${key}" privatekey=$(cat forwarder-tls.key)
 
 # If there is no pre-existing secret, create new:
 vault kv put "${key}" privatekey=$(cat server.key)
