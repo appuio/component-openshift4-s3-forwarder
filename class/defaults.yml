@@ -35,8 +35,9 @@ parameters:
       tolerations: []
 
     s3:
-      bucket: ""
       endpoint: ""
+      bucket: ""
+      path: '%Y-%m-%d'
       interval: 5m
       access_key: '?{vaultkv:${cluster:tenant}/${cluster:name}/openshift4-s3-forwarder/${_instance}/s3/accesskey}'
       secret_key: '?{vaultkv:${cluster:tenant}/${cluster:name}/openshift4-s3-forwarder/${_instance}/s3/secretkey}'

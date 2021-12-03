@@ -36,7 +36,7 @@ local configmap = kube.ConfigMap(app_name) {
         aws_sec_key "#{ENV['S3_SECRET_KEY']}"
         s3_bucket "#{ENV['S3_BUCKET']}"
         s3_endpoint "#{ENV['S3_ENDPOINT']}"
-        path %(path)s
+        path %(path)s/
         time_slice_format %(format)s
         <buffer time>
           @type memory
@@ -49,7 +49,7 @@ local configmap = kube.ConfigMap(app_name) {
         </buffer>
       </match>
     ||| % {
-      path: '%Y-%m-%d/',
+      path: params.s3.path,
       format: '%Y-%m-%d_%H%M',
       tls_config: if params.fluentd.ssl.enabled then |||
         <transport tls>
