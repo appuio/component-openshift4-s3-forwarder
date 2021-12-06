@@ -111,6 +111,14 @@ s3:
 
 Parameters for s3 integration.
 
+=== `endpoint`
+
+[horizontal]
+type:: string
+default:: ""
+
+The endpoint of the S3 bucket.
+
 === `bucket`
 
 [horizontal]
@@ -119,13 +127,13 @@ default:: Vault reference
 
 The bucket name to flush logs to.
 
-=== `endpoint`
+=== `path`
 
 [horizontal]
 type:: string
-default:: ""
+default:: '%Y-%m-%d'
 
-The endpoint of the S3 bucket.
+The path to save the logs within the bucket.
 
 === `interval`
 
