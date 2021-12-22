@@ -1,0 +1,126 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations: {}
+  labels:
+    name: openshift4-s3-forwarder
+  name: openshift4-s3-forwarder
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: openshift4-s3-forwarder
+  serviceName: openshift4-s3-forwarder
+  template:
+    metadata:
+      annotations: {}
+      labels:
+        name: openshift4-s3-forwarder
+    spec:
+      affinity: {}
+      containers:
+        - args: []
+          env:
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: fluentd-loglevel
+                  name: openshift4-s3-forwarder
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: spec.nodeName
+            - name: S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: access_key
+                  name: openshift4-s3-forwarder
+            - name: S3_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  key: s3-bucket
+                  name: openshift4-s3-forwarder
+            - name: S3_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  key: s3-endpoint
+                  name: openshift4-s3-forwarder
+            - name: S3_INTERVAL
+              valueFrom:
+                configMapKeyRef:
+                  key: s3-interval
+                  name: openshift4-s3-forwarder
+            - name: S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: secret_key
+                  name: openshift4-s3-forwarder
+            - name: SHARED_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: shared_key
+                  name: openshift4-s3-forwarder
+          image: docker.io/vshn/fluentd-s3:v1.0.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            tcpSocket:
+              port: 24224
+            timeoutSeconds: 3
+          name: openshift4-s3-forwarder
+          ports:
+            - containerPort: 24224
+              name: forwarder-tcp
+              protocol: TCP
+            - containerPort: 24224
+              name: forwarder-udp
+              protocol: UDP
+          readinessProbe:
+            initialDelaySeconds: 2
+            periodSeconds: 3
+            tcpSocket:
+              port: 24224
+            timeoutSeconds: 2
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1024Mi
+            requests:
+              cpu: 100m
+              memory: 512Mi
+          stdin: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          tty: false
+          volumeMounts:
+            - mountPath: /fluentd/log/
+              name: buffer
+            - mountPath: /fluentd/etc
+              name: fluentd-config
+              readOnly: true
+      dnsPolicy: ClusterFirst
+      imagePullSecrets: []
+      initContainers: []
+      nodeSelector: {}
+      restartPolicy: Always
+      serviceAccount: openshift4-s3-forwarder
+      terminationGracePeriodSeconds: 30
+      tolerations: []
+      volumes:
+        - emptyDir: {}
+          name: buffer
+        - configMap:
+            defaultMode: 420
+            items:
+              - key: td-agent.conf
+                path: fluent.conf
+            name: openshift4-s3-forwarder
+            optional: true
+          name: fluentd-config
+  updateStrategy:
+    rollingUpdate:
+      partition: 0
+    type: RollingUpdate
+  volumeClaimTemplates: []
