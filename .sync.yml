@@ -1,7 +1,0 @@
-:global:
-  componentName: openshift4-s3-forwarder
-  feature_componentCompile: false
-
-docs/antora.yml:
-  name: openshift4-s3-forwarder
-  title: S3 Forwarder

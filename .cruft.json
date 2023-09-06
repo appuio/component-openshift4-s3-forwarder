@@ -1,0 +1,25 @@
+{
+  "template": "https://github.com/projectsyn/commodore-component-template.git",
+  "commit": "60af5994920f4861423d6361eb39256a3930e968",
+  "checkout": "main",
+  "context": {
+    "cookiecutter": {
+      "name": "S3 Forwarder",
+      "slug": "openshift4-s3-forwarder",
+      "parameter_key": "openshift4_s3_forwarder",
+      "test_cases": "defaults",
+      "add_lib": "n",
+      "add_pp": "n",
+      "add_golden": "y",
+      "add_matrix": "y",
+      "add_go_unit": "n",
+      "copyright_holder": "VSHN AG <info@vshn.ch>",
+      "copyright_year": "2021",
+      "github_owner": "appuio",
+      "github_name": "component-openshift4-s3-forwarder",
+      "github_url": "https://github.com/appuio/component-openshift4-s3-forwarder",
+      "_template": "https://github.com/projectsyn/commodore-component-template.git"
+    }
+  },
+  "directory": null
+}
