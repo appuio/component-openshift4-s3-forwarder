@@ -20,7 +20,7 @@ After writing the documentation, please use the `make docs-vale` command and cor
 ## Contributing and license
 
 This library is licensed under [BSD-3-Clause](LICENSE).
-For information about how to contribute see [CONTRIBUTING](CONTRIBUTING.md).
+For information about how to contribute, see [CONTRIBUTING](CONTRIBUTING.md).
 
 [commodore]: https://syn.tools/commodore/
 [asciidoc]: https://asciidoctor.org/
