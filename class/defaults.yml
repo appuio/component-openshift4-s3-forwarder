@@ -2,6 +2,7 @@ parameters:
   openshift4_s3_forwarder:
     =_metadata:
       multi_instance: true
+      multi_tenant: true
     namespace: openshift-logging
 
     images:
